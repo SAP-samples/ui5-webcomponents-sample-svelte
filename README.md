@@ -1,48 +1,72 @@
-# Svelte + TS + Vite
+![UI5-logo](docs/imgs/UI5-logo.png)
 
-This template should help get you started developing with Svelte and TypeScript in Vite.
+# **UI5 Web Components Svelte Application**
+[Svelte](https://svelte.dev/) sample application to demonstrate the usage of UI5 Web Components. It showcases how to:
+  - Bind properties
+  - Subscribe to events
+  - Use nested components 
 
-## Recommended IDE Setup
+Project takes advantage of [ViteJs](https://vitejs.dev/guide/#scaffolding-your-first-vite-project) and its svelte-ts tempalte
 
-[VSCode](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+## **Prerequisites**
+- [Node.js](https://nodejs.org/en/) version >=12.0.0.
 
-## Need an official Svelte framework?
+## **Getting Started**
+1. [Clone this repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) and navigate to the downloaded directory
+    ```sh
+    git clone https://github.tools.sap/I546507/ui5-webcomponents-sample-svelte.git
+    cd ui5-webcomponents-sample-svelte
+    ```
+2. Install all dependencies
+   ```sh
+   yarn
+   ```
+3. Start the local dev server and run the application
+   ```sh
+   yarn dev
+   ```
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+## **Noteworthy**
+ 
+### Consume UI5 Web Components
+Import the desired component(s) in your app to define the UI5 Web Component.
+ 
+For example, to use `ui5-button` you need to import it:
+ 
+```js
+import "@ui5/webcomponents/dist/Button"; // loads ui5-button
+```
+ 
+Then, you can use the custom element in an HTML page:
+ 
+```html
+<ui5-button>Hello world!</ui5-button>
+```
 
-## Technical considerations
+## **Browser support**
 
-**Why use this over SvelteKit?**
+Currently only Chrome, Safari and Firefox support Web Components natively.
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
-  `vite dev` and `vite build` wouldn't work in a SvelteKit environment, for example.
+If your application should run on browsers without native Web Components support (Edge and/or IE11), import one the following modules before your first Web Component import: 
 
-This template contains as little as possible to get started with Vite + TypeScript + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+### Edge only
 
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+```js
+import "@ui5/webcomponents-base/dist/features/browsersupport/Edge";
+```
 
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
+### Edge and IE11
 
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
+```js
+import "@ui5/webcomponents-base/dist/features/browsersupport/IE11";
+```
 
-**Why include `.vscode/extensions.json`?**
+*Note:* Importing the module for IE11 support automatically enables Edge support as well, so there is no need to import them both explicitly.
 
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
+Example:
 
-**Why enable `allowJs` in the TS template?**
-
-While `allowJs: false` would indeed prevent the use of `.js` files in the project, it does not prevent the use of JavaScript syntax in `.svelte` files. In addition, it would force `checkJs: false`, bringing the worst of both worlds: not being able to guarantee the entire codebase is TypeScript, and also having worse typechecking for the existing JavaScript. In addition, there are valid use cases in which a mixed codebase may be relevant.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/rixo/svelte-hmr#svelte-hmr).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```ts
-// store.ts
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
+```js
+import "@ui5/webcomponents-base/dist/features/browsersupport/IE11"; // This will enable Edge and IE11 support for all Web Components below
+import "@ui5/webcomponents/dist/Button"; // loads ui5-button
+import "@ui5/webcomponents/dist/Label"; // loads ui5-label
 ```
