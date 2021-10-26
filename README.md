@@ -1,7 +1,7 @@
 ![UI5-logo](docs/imgs/UI5-logo.png)
 
 # **UI5 Web Components Svelte Application**
-### ***Sample ToDo application that demonstrates the usage of UI5 Web Components using [Svelte](https://svelte.dev/)***
+### ***Sample ToDo application that demonstrates the usage of [UI5 Web Components](https://sap.github.io/ui5-webcomponents/) using [Svelte](https://svelte.dev/)***
 
 The application showcases how to:
   - Bind properties
