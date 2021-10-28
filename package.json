@@ -19,6 +19,7 @@
     "vite": "^2.6.4"
   },
   "dependencies": {
-    "@ui5/webcomponents": "^1.0.0-rc.15"
+    "@ui5/webcomponents": "^1.0.0-rc.15",
+    "@ui5/webcomponents-fiori": "^1.0.0-rc.15"
   }
 }
