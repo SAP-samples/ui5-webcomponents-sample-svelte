@@ -20,10 +20,10 @@
     let dialog;
     let dialogTextArea;
     let dialogDatePicker;
-
+    
     // Create ToDo Fields
-    let itemInput;
-    let itemDateInput;
+    let itemInputValue;
+    let itemDateInputValue;
 
     // Edit Dialog fields
     let itemEditText: string = ""
@@ -31,14 +31,22 @@
     let selectedEditItem: number;
 
     // Event Handlers
+
+    const handleItemInput = (event) => {
+        itemInputValue = event.target.value
+    }
+
+    const handleDateInput = (event) => {
+        itemDateInputValue = event.target.value
+    }
+
     const handleAdd = (event) => {
         const newTodo: TodoItemT = {
             id: ($todos.length + 1),
-            desc: itemInput.value,
-            deadline: itemDateInput.value,
+            desc: itemInputValue,
+            deadline: itemDateInputValue,
             done: false
         }
-
         todos.update(todos => [...todos, newTodo])
     }
 
@@ -80,7 +88,7 @@
         const filteredTodos = $todos.filter(todo => todo.id !== event.detail.id);
         todos.set(filteredTodos)
 
-        const filteredDoneTodos = $doneTodos.filter(todo => todo.id.toString() !== event.detail.id);
+        const filteredDoneTodos = $doneTodos.filter(todo => todo.id !== event.detail.id);
         doneTodos.set(filteredDoneTodos);
     }
 
@@ -142,10 +150,10 @@
         
         <div class="create-todo-wrapper">
             <div id="add-input">
-                <ui5-input bind:this={itemInput} placeholder="My todo ..." ></ui5-input>
+                <ui5-input on:input={handleItemInput} placeholder="My todo ..." ></ui5-input>
             </div>
             <div id="date-picker">
-                <ui5-date-picker bind:this={itemDateInput} format-pattern="dd/MM/yyyy"></ui5-date-picker>
+                <ui5-date-picker on:input={handleDateInput} format-pattern="dd/MM/yyyy"></ui5-date-picker>
             </div>
             <div id="add-btn">
                 <ui5-button on:click={handleAdd} design="Emphasized" > Add Todo </ui5-button>

@@ -10,7 +10,7 @@
 </script>
 
 <ui5-list mode="MultiSelect"  on:selection-change>
-    {#each items as item (item)}
+    {#each items as item (item.id)}
         <TodoItem item={item} datakey={item.id} on:item-edit on:item-delete />
     {/each}
 </ui5-list>
