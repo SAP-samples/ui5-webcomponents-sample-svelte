@@ -27,3 +27,9 @@ Disclaimer: The code in this project may include calls to APIs (“API Calls”)
 Files: *
 Copyright: 2021 SAP SE or an SAP affiliate company and [YOUR REPO NAME] contributors
 License: Apache-2.0
+
+Files: docs/imgs/ui5-svelte-logo.png
+Copyright:
+    2016-21 Svelte contributors (https://github.com/sveltejs/svelte/graphs/contributors)
+	2021 SAP SE or an SAP affiliate company and [YOUR REPO NAME] contributors
+License: Apache-2.0 and MIT
