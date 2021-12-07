@@ -1,5 +1,7 @@
 ![UI5-logo](docs/imgs/ui5-svelte-logo.png)
 
+[![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/ui5-webcomponents-sample-svelte)](https://api.reuse.software/info/github.com/SAP-samples/ui5-webcomponents-sample-svelte)
+
 # **UI5 Web Components Sample ToDo App**
 ### ***Sample ToDo application that demonstrates the usage of [UI5 Web Components](https://sap.github.io/ui5-webcomponents/) using [Svelte](https://svelte.dev/)***
 
