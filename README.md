@@ -15,7 +15,7 @@ Project was initialized uising **[ViteJs](https://vitejs.dev/guide/#scaffolding-
 ## **Download and Installation**
 1. **[Clone this repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)** and navigate to the downloaded directory
     ```sh
-    git clone https://github.tools.sap/I546507/ui5-webcomponents-sample-svelte.git
+    git clone https://github.com/SAP-samples/ui5-webcomponents-sample-svelte.git
     cd ui5-webcomponents-sample-svelte
     ```
 2. Install all dependencies
