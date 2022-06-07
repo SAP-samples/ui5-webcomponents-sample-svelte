@@ -48,27 +48,9 @@ For additional support, [ask a question in SAP Community](https://answers.sap.co
 
 ## **Browser support**
 
-- Currently only Chrome, Safari and Firefox support Web Components natively.
+Currently Chrome, Safari, Firefox and Edge (Chromium-based) support Web Components natively.
 
-- If your application should run on browsers without native Web Components support (Edge and/or IE11), import one the following modules before your first Web Component import: 
-- ### Edge only
-  ```js
-  import "@ui5/webcomponents-base/dist/features/browsersupport/Edge";
-  ```
 
-- ### Edge and IE11
-  ```js
-  import "@ui5/webcomponents-base/dist/features/browsersupport/IE11";
-  ```
-  ***Note:*** Importing the module for IE11 support automatically enables Edge support as well, so there is no need to import them both explicitly.
-
-  **Example:**
-
-  ```js
-  import "@ui5/webcomponents-base/dist/features/browsersupport/IE11"; // This will enable Edge and IE11 support for all Web Components below
-  import "@ui5/webcomponents/dist/Button"; // loads ui5-button
-  import "@ui5/webcomponents/dist/Label"; // loads ui5-label
-  ```
 ## **Contributing**
 If you wish to contribute code, offer fixes or improvements, please send a pull request. Due to legal reasons, contributors will be asked to accept a DCO when they create the first pull request to this project. This happens in an automated fashion during the submission process. SAP uses [the standard DCO text of the Linux Foundation](https://developercertificate.org/).
 
