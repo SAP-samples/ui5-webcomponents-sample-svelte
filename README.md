@@ -20,11 +20,11 @@ Project was initialized uising **[ViteJs](https://vitejs.dev/guide/#scaffolding-
     ```
 2. Install all dependencies
    ```sh
-   yarn
+   npm install
    ```
 3. Start the local dev server and run the application
    ```sh
-   yarn dev
+   npm run dev
    ```
 
 ## **How to obtain support**
