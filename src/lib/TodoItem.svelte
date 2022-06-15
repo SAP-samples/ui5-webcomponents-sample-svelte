@@ -26,8 +26,8 @@
 
 <ui5-li-custom data-key={datakey} selected={item.done}>
 	<div class="li-content">
-		<div class="li-content-text">{item.desc} - finish before: {item.deadline}</div>
-		<div>
+		<span class="li-content-text">{item.desc} - finish before: {item.deadline}</span>
+		<div class="li-content-actions">
 			<ui5-button class="edit-btn" on:click={handleEditPress}>Edit</ui5-button>
 			<ui5-button design="Negative" on:click={handleDeletePress}>Delete</ui5-button>
 		</div>
@@ -46,5 +46,9 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+	}
+
+	.edit-btn {
+		margin-inline-end: 1rem;
 	}
 </style>

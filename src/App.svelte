@@ -18,7 +18,7 @@
 	setTheme("sap_horizon");
 
 	const shellBarTitle: string = "UI5 Web Components Svelte Sample";
-	const dialogHeaderText: string = "Edit Todo Item";
+	const dialogHeaderText: string = "Edit Todo";
 
 	// Elements
 	let dialog;
@@ -160,24 +160,18 @@
 
 	<section class="app-content">
 		<div class="create-todo-wrapper">
-			<div id="add-input">
-				<ui5-input on:input={handleItemInput} placeholder="My todo ..." />
-			</div>
-			<div id="date-picker">
-				<ui5-date-picker on:input={handleDateInput} format-pattern="dd/MM/yyyy" />
-			</div>
-			<div id="add-btn">
-				<ui5-button on:click={handleAdd} design="Emphasized"> Add Todo </ui5-button>
-			</div>
+			<ui5-input id="add-input" on:input={handleItemInput} placeholder="My Todo ..." />
+			<ui5-date-picker id="date-picker" on:input={handleDateInput} format-pattern="dd/MM/yyyy" />
+			<ui5-button id="add-btn" on:click={handleAdd} design="Emphasized"> Add Todo </ui5-button>
 		</div>
-	</section>
 
-	<section class="list-todo-wrapper">
-		<TodoList items={$todos} on:item-edit={handleEdit} on:item-delete={handleRemove} on:selection-change={handleDone} />
+		<section class="list-todo-wrapper">
+			<TodoList items={$todos} on:item-edit={handleEdit} on:item-delete={handleRemove} on:selection-change={handleDone} />
 
-		<ui5-panel header-text="Completed Tasks">
-			<TodoList items={$doneTodos} on:item-edit={handleEdit} on:item-delete={handleRemove} on:selection-change={handleUndone} />
-		</ui5-panel>
+			<ui5-panel header-text="Completed Tasks">
+				<TodoList items={$doneTodos} on:item-edit={handleEdit} on:item-delete={handleRemove} on:selection-change={handleUndone} />
+			</ui5-panel>
+		</section>
 	</section>
 
 	<ui5-dialog bind:this={dialog} header-text={dialogHeaderText}>
@@ -189,52 +183,52 @@
 
 			<div class="edit-wrapper date-edit-fields">
 				<ui5-label>Date:</ui5-label>
-				<ui5-datepicker bind:this={dialogDatePicker} format-pattern="dd/MM/yyyy" value={itemEditDate} />
+				<ui5-date-picker bind:this={dialogDatePicker} format-pattern="dd/MM/yyyy" value={itemEditDate} />
 			</div>
 		</div>
 
 		<div class="dialog-footer" data-ui5-slot="footer">
-			<ui5-button design="Transparent" on:click={cancelEdits}>Cancel</ui5-button>
-			<ui5-button design="Emphasized" on:click={saveEdits}>Save</ui5-button>
+			<ui5-button class="dialog-footer-btn--cancel" design="Transparent" on:click={cancelEdits}>Cancel</ui5-button>
+			<ui5-button class="dialog-footer-btn--save" design="Emphasized" on:click={saveEdits}>Save</ui5-button>
 		</div>
 	</ui5-dialog>
 </main>
 
 <style scoped>
-	ui5-input,
-	ui5-date-picker,
-	ui5-button {
-		width: 100%;
+	:global(body) {
+		padding: 0;
+		margin: 0;
 	}
 
 	.app-container {
 		width: 100%;
 	}
 	.app-content {
-		display: flex;
-		flex-direction: column;
-		justify-content: stretch;
-		margin-top: 1rem;
+		height: calc(100% - 3rem);
+		padding: 0 1rem;
+		width: calc(100% - 2rem);
 	}
 	.create-todo-wrapper {
 		display: flex;
 		flex-direction: row;
-		align-items: stretch;
-		justify-content: flex-start;
-		margin-bottom: 1rem;
+		align-items: center;
+		justify-content: center;
+		padding-top: 0.5rem;
+		padding-bottom: 2rem;
+		box-sizing: border-box;
+		border-bottom: 1px solid #b3b3b3;
 	}
 
 	#add-input {
-		flex: 3;
-		margin-right: 1rem;
+		flex: auto;
 	}
 	#date-picker {
-		flex: 1;
-		margin-right: 1rem;
+		margin: 0 0.5rem 0 0.5rem;
+		width: auto;
 	}
 
 	#add-btn {
-		flex: 0;
+		width: auto;
 	}
 
 	.list-todo-wrapper {
@@ -253,12 +247,19 @@
 		padding: 0.25rem 0.25rem 0 0.25rem;
 		border-top: 1px solid #d9d9d9;
 	}
+
+	.dialog-footer-btn--cancel {
+		margin-inline-end: 0.25rem;
+	}
+
 	.title-textarea {
 		height: 100px;
 		display: inline-block;
 		width: 100%;
 	}
 	.date-edit-fields {
+		display: flex;
+		flex-direction: column;
 		margin-top: 1rem;
 	}
 
@@ -269,10 +270,17 @@
 		}
 
 		#add-input,
-		#date-picker {
-			margin-right: 0;
+		#date-picker,
+		#add-btn {
+			margin-inline-end: 0;
 			margin-bottom: 1rem;
 			transition: ease-in-out 0.6s;
+		}
+
+		#add-input,
+		#date-picker,
+		#add-btn {
+			width: 100%;
 		}
 	}
 </style>
