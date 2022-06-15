@@ -17,7 +17,7 @@
 
 	setTheme("sap_horizon");
 
-	const shellBarTitle: string = "UI5 Web Components Svelte Sample";
+	const shellBarTitle: string = "UI5 Web Components Svelte Sample Application";
 	const dialogHeaderText: string = "Edit Todo";
 
 	// Elements
