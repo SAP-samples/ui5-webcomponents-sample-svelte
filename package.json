@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@ui5/webcomponents": "^1.4.0",
+    "@ui5/webcomponents-base": "^1.4.0",
     "@ui5/webcomponents-fiori": "^1.4.0"
   }
 }
