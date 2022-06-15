@@ -154,7 +154,7 @@
 <main class="app-container">
 	<header class="app-header">
 		<ui5-shellbar primary-title={shellBarTitle}>
-			<img slot="logo" src={logo} alt="ui5 orange pheonix logo" />
+			<img class="app-header-logo" slot="logo" src={logo} alt="ui5 orange pheonix logo" />
 		</ui5-shellbar>
 	</header>
 
@@ -198,6 +198,11 @@
 	:global(body) {
 		padding: 0;
 		margin: 0;
+	}
+
+	.app-header-logo {
+		height: 2rem;
+		max-height: 2rem;
 	}
 
 	.app-container {
