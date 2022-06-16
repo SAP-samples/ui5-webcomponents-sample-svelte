@@ -24,7 +24,7 @@
 	};
 </script>
 
-<ui5-li-custom data-key={datakey} selected={item.done}>
+<ui5-li-custom data-key={datakey} selected={item.done ? "true" : undefined}>
 	<div class="li-content">
 		<span class="li-content-text">{item.desc} - finish before: {item.deadline}</span>
 		<div class="li-content-actions">
