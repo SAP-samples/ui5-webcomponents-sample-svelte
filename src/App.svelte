@@ -1,5 +1,8 @@
 <script lang="ts">
 	// UI5  Components
+	import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme";
+	import "@ui5/webcomponents-base/dist/features/F6Navigation";
+
 	import "@ui5/webcomponents/dist/Button";
 	import "@ui5/webcomponents/dist/Input";
 	import "@ui5/webcomponents/dist/DatePicker";
@@ -13,7 +16,6 @@
 	import "@ui5/webcomponents-fiori/dist/ShellBarItem";
 	import "@ui5/webcomponents-icons/dist/palette.js";
 	import "@ui5/webcomponents-fiori/dist/Assets.js";
-	import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme";
 
 	import TodoList from "./lib/TodoList.svelte";
 	import { todos, doneTodos } from "./stores/stores";
@@ -243,6 +245,10 @@
 		margin: 0;
 		height: 100%;
 		background-color: var(--sapBackgroundColor);
+	}
+
+	*:not(:defined) {
+		display: none;
 	}
 
 	.app {
