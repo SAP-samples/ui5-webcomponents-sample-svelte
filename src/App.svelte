@@ -187,11 +187,11 @@
 		</div>
 
 		<section class="list-todo-wrapper">
-			<ui5-panel class="list-todos-panel" header-text="Incompleted Tasks" collapsed={!$todos.length}>
+			<ui5-panel class="list-todos-panel" header-text="Incompleted Tasks" collapsed={!$todos.length || undefined}>
 				<TodoList items={$todos} on:item-edit={handleEdit} on:item-delete={handleRemove} on:selection-change={handleDone} />
 			</ui5-panel>
 
-			<ui5-panel class="list-todos-panel" header-text="Completed Tasks" collapsed={!$doneTodos.length}>
+			<ui5-panel class="list-todos-panel" header-text="Completed Tasks" collapsed={!$todos.length || undefined}>
 				<TodoList items={$doneTodos} on:item-edit={handleEdit} on:item-delete={handleRemove} on:selection-change={handleUndone} />
 			</ui5-panel>
 		</section>
