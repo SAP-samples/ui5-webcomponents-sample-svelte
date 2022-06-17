@@ -1,13 +1,18 @@
 <script lang="ts">
 	// UI5  Components
-	import "@ui5/webcomponents-fiori/dist/ShellBar";
 	import "@ui5/webcomponents/dist/Button";
 	import "@ui5/webcomponents/dist/Input";
 	import "@ui5/webcomponents/dist/DatePicker";
 	import "@ui5/webcomponents/dist/Panel";
 	import "@ui5/webcomponents/dist/Dialog";
 	import "@ui5/webcomponents/dist/TextArea";
-	import "@ui5/webcomponents-fiori/dist/Assets";
+	import "@ui5/webcomponents/dist/Popover";
+	import "@ui5/webcomponents/dist/Tab";
+	import "@ui5/webcomponents/dist/TabContainer";
+	import "@ui5/webcomponents-fiori/dist/ShellBar";
+	import "@ui5/webcomponents-fiori/dist/ShellBarItem";
+	import "@ui5/webcomponents-icons/dist/palette.js";
+	import "@ui5/webcomponents-fiori/dist/Assets.js";
 	import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme";
 
 	import TodoList from "./lib/TodoList.svelte";
@@ -24,6 +29,7 @@
 	let dialog;
 	let dialogTextArea;
 	let dialogDatePicker;
+	let themeSettingsPopover;
 
 	// Create ToDo Fields
 	let itemInputValue;
@@ -35,6 +41,15 @@
 	let selectedEditItem: number;
 
 	// Event Handlers
+
+	const handleThemeSettingsToggle = (event) => {
+		themeSettingsPopover.showAt(event.detail.targetRef);
+	};
+
+	const handleThemeChange = (event) => {
+		setTheme(event.detail.selectedItems[0].getAttribute("data-theme"));
+		themeSettingsPopover.close();
+	};
 
 	const handleItemInput = (event) => {
 		itemInputValue = event.target.value;
@@ -151,24 +166,32 @@
 	};
 </script>
 
-<main class="app-container">
+<main class="app">
 	<header class="app-header">
-		<ui5-shellbar primary-title={shellBarTitle}>
+		<ui5-shellbar primary-title={shellBarTitle} show-notifications notifications-count="2">
 			<img class="app-header-logo" slot="logo" src={logo} alt="ui5 orange pheonix logo" />
+			<ui5-shellbar-item icon="palette" text="Theme" on:click={handleThemeSettingsToggle} />
+			<ui5-avatar slot="profile" size="XS" initials="JD" />
 		</ui5-shellbar>
 	</header>
 
+	<ui5-tabcontainer fixed collapsed>
+		<ui5-tab text="My Todos" />
+	</ui5-tabcontainer>
+
 	<section class="app-content">
 		<div class="create-todo-wrapper">
-			<ui5-input id="add-input" on:input={handleItemInput} placeholder="My Todo ..." />
+			<ui5-input id="add-input" on:input={handleItemInput} placeholder="Type a task..." />
 			<ui5-date-picker id="date-picker" on:input={handleDateInput} format-pattern="dd/MM/yyyy" />
 			<ui5-button id="add-btn" on:click={handleAdd} design="Emphasized"> Add Todo </ui5-button>
 		</div>
 
 		<section class="list-todo-wrapper">
-			<TodoList items={$todos} on:item-edit={handleEdit} on:item-delete={handleRemove} on:selection-change={handleDone} />
+			<ui5-panel class="list-todos-panel" header-text="Incompleted Tasks">
+				<TodoList items={$todos} on:item-edit={handleEdit} on:item-delete={handleRemove} on:selection-change={handleDone} />
+			</ui5-panel>
 
-			<ui5-panel header-text="Completed Tasks">
+			<ui5-panel class="list-todos-panel" header-text="Completed Tasks">
 				<TodoList items={$doneTodos} on:item-edit={handleEdit} on:item-delete={handleRemove} on:selection-change={handleUndone} />
 			</ui5-panel>
 		</section>
@@ -192,12 +215,44 @@
 			<ui5-button class="dialog-footer-btn--save" design="Emphasized" on:click={saveEdits}>Save</ui5-button>
 		</div>
 	</ui5-dialog>
+
+	<ui5-popover bind:this={themeSettingsPopover} class="app-bar-theming-popover" placement-type="Bottom" horizontal-align="Right" header-text="Theme">
+		<ui5-list mode="SingleSelect" on:selection-change={handleThemeChange}>
+			<ui5-li icon="palette" data-theme="sap_horizon" selected>SAP Horizon Morning</ui5-li>
+			<ui5-li icon="palette" data-theme="sap_horizon_dark">SAP Horizon Evening</ui5-li>
+			<ui5-li icon="palette" data-theme="sap_horizon_hcb">SAP Horizon HCB</ui5-li>
+			<ui5-li icon="palette" data-theme="sap_horizon_hcw">SAP Horizon HCW</ui5-li>
+			<ui5-li icon="palette" data-theme="sap_fiori_3">SAP Quartz Light</ui5-li>
+			<ui5-li icon="palette" data-theme="sap_fiori_3_dark">SAP Quartz Dark</ui5-li>
+			<ui5-li icon="palette" data-theme="sap_fiori_3_hcb">SAP Quartz HCB</ui5-li>
+			<ui5-li icon="palette" data-theme="sap_fiori_3_hcw">SAP Quartz HCW</ui5-li>
+		</ui5-list>
+	</ui5-popover>
 </main>
 
 <style scoped>
+	:global(html) {
+		padding: 0;
+		margin: 0;
+		height: 100%;
+		background-color: var(--sapBackgroundColor);
+	}
+
 	:global(body) {
 		padding: 0;
 		margin: 0;
+		height: 100%;
+		background-color: var(--sapBackgroundColor);
+	}
+
+	.app {
+		width: 100%;
+	}
+
+	.app-content {
+		height: calc(100% - 3rem);
+		padding: 0 1rem;
+		width: calc(100% - 2rem);
 	}
 
 	.app-header-logo {
@@ -205,23 +260,18 @@
 		max-height: 2rem;
 	}
 
-	.app-container {
-		width: 100%;
+	.app-bar-theming-popover {
+		width: 250px;
 	}
-	.app-content {
-		height: calc(100% - 3rem);
-		padding: 0 1rem;
-		width: calc(100% - 2rem);
-	}
+
 	.create-todo-wrapper {
 		display: flex;
-		flex-direction: row;
 		align-items: center;
 		justify-content: center;
-		padding-top: 0.5rem;
-		padding-bottom: 2rem;
+		padding: 2rem 1rem;
+		margin: 2rem 0;
 		box-sizing: border-box;
-		border-bottom: 1px solid #b3b3b3;
+		background-color: var(--sapObjectHeader_Background);
 	}
 
 	#add-input {
@@ -240,6 +290,11 @@
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
+		margin: 1rem 0;
+	}
+
+	.list-todos-panel {
+		margin-bottom: 2rem;
 	}
 
 	.dialog-content {
