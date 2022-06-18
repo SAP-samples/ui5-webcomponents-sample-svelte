@@ -48,6 +48,9 @@
 		white-space: nowrap;
 	}
 
+	.li-content-actions {
+		display: flex;
+	}
 	.edit-btn {
 		margin-inline-end: 1rem;
 	}
