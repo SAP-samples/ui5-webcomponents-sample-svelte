@@ -58,7 +58,7 @@
 	};
 
 	const handleDateInput = (event) => {
-		itemDateInputValue = event.target.value;
+		itemDateInputValue = event.detail.value;
 	};
 
 	const handleAdd = (event) => {
@@ -184,7 +184,7 @@
 	<section class="app-content">
 		<div class="create-todo-wrapper">
 			<ui5-input id="add-input" on:input={handleItemInput} placeholder="Type a task..." />
-			<ui5-date-picker id="date-picker" on:input={handleDateInput} format-pattern="dd/MM/yyyy" />
+			<ui5-date-picker id="date-picker" on:input={handleDateInput} on:change={handleDateInput} format-pattern="dd/MM/yyyy" />
 			<ui5-button id="add-btn" on:click={handleAdd} design="Emphasized"> Add Todo </ui5-button>
 		</div>
 
