@@ -336,11 +336,13 @@
 		}
 
 		#add-input,
-		#date-picker,
-		#add-btn {
-			margin-inline-end: 0;
+		#date-picker {
 			margin-bottom: 1rem;
 			transition: ease-in-out 0.6s;
+		}
+
+		#add-btn {
+			margin-bottom: 0;
 		}
 
 		#add-input,
