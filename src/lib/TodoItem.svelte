@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
-	import "@ui5/webcomponents/dist/CustomListItem";
+	import "@ui5/webcomponents/dist/ListItemCustom";
 	import type { TodoItemT } from "../types/TodoItem.type";
 
 	// Props
