@@ -7,7 +7,7 @@
 	export let items: TodoItemT[];
 </script>
 
-<ui5-list mode="MultiSelect" on:selection-change>
+<ui5-list selection-mode="Multiple" on:selection-change>
 	{#each items as item (item.id)}
 		<TodoItem {item} datakey={item.id} on:item-edit on:item-delete />
 	{/each}

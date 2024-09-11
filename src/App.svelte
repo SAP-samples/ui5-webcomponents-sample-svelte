@@ -54,24 +54,28 @@
 	// Event Handlers
 
 	const handleThemeSettingsToggle = (event) => {
-		themeSettingsPopover.showAt(event.detail.targetRef);
+		themeSettingsPopover.opener = event.detail.targetRef;
+		themeSettingsPopover.open = true;
 	};
 
 	const handleThemeChange = (event) => {
 		setTheme(event.detail.selectedItems[0].getAttribute("data-theme"));
-		themeSettingsPopover.close();
+		themeSettingsPopover = false;
 	};
 
 	const handleProfileClick = (event) => {
-		profileSettingsPopover.showAt(event.detail.targetRef);
+		profileSettingsPopover.opener = event.detail.targetRef;
+		profileSettingsPopover.open = true;
 	};
 
 	const handleProfileSettingsSelect = (event) => {
 		const selectedKey = event.detail.item.getAttribute("data-key");
 		if (selectedKey === "settings") {
-			window["settings-dialog"].show(event.detail.targetRef);
+			window["settings-dialog"].opener = event.detail.targetRef;
+			window["settings-dialog"].open = true;
 		} else if (selectedKey === "help") {
-			window["help-dialog"].show(event.detail.targetRef);
+			window["help-dialog"].opener = event.detail.targetRef;
+			window["help-dialog"].open = true;
 		}
 	};
 
@@ -88,12 +92,12 @@
 		}
 	};
 
-	const handleSettingsDialogCloseButtonClick = (event) => {
-		window["settings-dialog"].close();
+	const handleSettingsDialogCloseButtonClick = () => {
+		window["settings-dialog"].open = false;
 	};
 
-	const handleHelpDialogCloseButtonClick = (event) => {
-		window["help-dialog"].close();
+	const handleHelpDialogCloseButtonClick = () => {
+		window["help-dialog"].open = false;
 	};
 
 	const handleItemInput = (event) => {
@@ -176,7 +180,7 @@
 		itemEditDate = todoObj.deadline;
 		selectedEditItem = todoObj.id;
 
-		dialog.show();
+		dialog.open = true;
 	};
 
 	const saveEdits = () => {
@@ -203,11 +207,11 @@
 			})
 		);
 
-		dialog.close();
+		dialog.open = false;
 	};
 
 	const cancelEdits = () => {
-		dialog.close();
+		dialog.open = false;
 	};
 </script>
 
@@ -220,7 +224,7 @@
 		</ui5-shellbar>
 	</header>
 
-	<ui5-tabcontainer fixed collapsed>
+	<ui5-tabcontainer collapsed>
 		<ui5-tab text="My Todos" />
 	</ui5-tabcontainer>
 
@@ -261,8 +265,8 @@
 		</div>
 	</ui5-dialog>
 
-	<ui5-popover bind:this={themeSettingsPopover} class="app-bar-theming-popover" placement-type="Bottom" horizontal-align="Right" header-text="Theme">
-		<ui5-list mode="SingleSelect" on:selection-change={handleThemeChange}>
+	<ui5-popover bind:this={themeSettingsPopover} class="app-bar-theming-popover" placement="Bottom" horizontal-align="End" header-text="Theme">
+		<ui5-list selection-mode="Single" on:selection-change={handleThemeChange}>
 			<ui5-li icon="palette" data-theme="sap_horizon" selected>SAP Horizon Morning</ui5-li>
 			<ui5-li icon="palette" data-theme="sap_horizon_dark">SAP Horizon Evening</ui5-li>
 			<ui5-li icon="palette" data-theme="sap_horizon_hcb">SAP Horizon HCB</ui5-li>
@@ -274,7 +278,7 @@
 		</ui5-list>
 	</ui5-popover>
 
-	<ui5-popover bind:this={profileSettingsPopover} id="profile-pop" class="app-bar-profile-popover" placement-type="Bottom" horizontal-align="Right">
+	<ui5-popover bind:this={profileSettingsPopover} id="profile-pop" class="app-bar-profile-popover" placement="Bottom" horizontal-align="End">
 		<div class="profile-settings">
 			<ui5-avatar size="M" initials="JD" />
 			<div class="profile-text">
@@ -284,7 +288,7 @@
 		</div>
 
 		<div class="profile-settings-list">
-			<ui5-list mode="SingleSelect" separators="None" on:item-click={handleProfileSettingsSelect} bind:this={profileSettingsPopover}>
+			<ui5-list selection-mode="Single" separators="None" on:item-click={handleProfileSettingsSelect} bind:this={profileSettingsPopover}>
 				<ui5-li icon="settings" data-key="settings">Settings</ui5-li>
 				<ui5-li icon="sys-help" data-key="help">Help</ui5-li>
 				<ui5-li icon="log" data-key="sign-out">Sign out</ui5-li>
