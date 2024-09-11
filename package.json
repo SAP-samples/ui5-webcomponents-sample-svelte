@@ -43,9 +43,9 @@
     "vite": "^2.9.10"
   },
   "dependencies": {
-    "@ui5/webcomponents": "^2.1.2",
-    "@ui5/webcomponents-base": "^2.1.2",
-    "@ui5/webcomponents-fiori": "^2.1.2",
-    "@ui5/webcomponents-icons": "^2.1.2"
+    "@ui5/webcomponents": "^2.2.0",
+    "@ui5/webcomponents-base": "^2.2.0",
+    "@ui5/webcomponents-fiori": "^2.2.0",
+    "@ui5/webcomponents-icons": "^2.2.0"
   }
 }
