@@ -36,19 +36,19 @@
 	const dialogHeaderText: string = "Edit Todo";
 
 	// Elements
-	let dialog;
-	let dialogTextArea;
-	let dialogDatePicker;
-	let themeSettingsPopover;
-	let profileSettingsPopover;
+	let dialog = $state();
+	let dialogTextArea = $state();
+	let dialogDatePicker = $state();
+	let themeSettingsPopover = $state();
+	let profileSettingsPopover = $state();
 
 	// Create ToDo Fields
 	let itemInputValue;
 	let itemDateInputValue;
 
 	// Edit Dialog fields
-	let itemEditText: string = "";
-	let itemEditDate: string = "";
+	let itemEditText: string = $state("");
+	let itemEditDate: string = $state("");
 	let selectedEditItem: number;
 
 	// Event Handlers
@@ -133,7 +133,7 @@
 		todos.update((todos) =>
 			todos.filter((todo) => {
 				return selectedId !== todo.id.toString();
-			})
+			}),
 		);
 	};
 
@@ -152,7 +152,7 @@
 		doneTodos.update((doneTodos) =>
 			doneTodos.filter((todo) => {
 				return selectedIds.indexOf(todo.id.toString()) > -1;
-			})
+			}),
 		);
 
 		todos.update((todos) => [...todos, ...newlyDeselected]);
@@ -194,7 +194,7 @@
 					todo.deadline = edittedDate;
 				}
 				return todo;
-			})
+			}),
 		);
 
 		doneTodos.update((doneTodos) =>
@@ -204,7 +204,7 @@
 					todo.deadline = edittedDate;
 				}
 				return todo;
-			})
+			}),
 		);
 
 		dialog.open = false;
@@ -217,22 +217,22 @@
 
 <main class="app">
 	<header class="app-header">
-		<ui5-shellbar primary-title={shellBarTitle} show-notifications notifications-count="2" on:profile-click={handleProfileClick}>
+		<ui5-shellbar primary-title={shellBarTitle} show-notifications notifications-count="2" onprofile-click={handleProfileClick}>
 			<img class="app-header-logo" slot="logo" src={logo} alt="ui5 orange pheonix logo" />
-			<ui5-shellbar-item icon="palette" text="Theme" on:click={handleThemeSettingsToggle} />
-			<ui5-avatar slot="profile" size="XS" initials="JD" />
+			<ui5-shellbar-item icon="palette" text="Theme" onclick={handleThemeSettingsToggle}></ui5-shellbar-item>
+			<ui5-avatar slot="profile" size="XS" initials="JD"></ui5-avatar>
 		</ui5-shellbar>
 	</header>
 
 	<ui5-tabcontainer collapsed>
-		<ui5-tab text="My Todos" />
+		<ui5-tab text="My Todos"></ui5-tab>
 	</ui5-tabcontainer>
 
 	<section class="app-content">
 		<div class="create-todo-wrapper">
-			<ui5-input id="add-input" on:input={handleItemInput} placeholder="Type a task..." />
-			<ui5-date-picker id="date-picker" on:input={handleDateInput} on:change={handleDateInput} format-pattern="dd/MM/yyyy" />
-			<ui5-button id="add-btn" on:click={handleAdd} design="Emphasized"> Add Todo </ui5-button>
+			<ui5-input id="add-input" oninput={handleItemInput} placeholder="Type a task..."></ui5-input>
+			<ui5-date-picker id="date-picker" oninput={handleDateInput} onchange={handleDateInput} format-pattern="dd/MM/yyyy"></ui5-date-picker>
+			<ui5-button id="add-btn" onclick={handleAdd} design="Emphasized"> Add Todo </ui5-button>
 		</div>
 
 		<section class="list-todo-wrapper">
@@ -250,23 +250,23 @@
 		<div class="dialog-content">
 			<div class="edit-wrapper">
 				<ui5-label>Title:</ui5-label>
-				<ui5-textarea class="title-textarea" show-exceeded-text maxlength="24" bind:this={dialogTextArea} value={itemEditText} />
+				<ui5-textarea class="title-textarea" show-exceeded-text maxlength="24" bind:this={dialogTextArea} value={itemEditText}></ui5-textarea>
 			</div>
 
 			<div class="edit-wrapper date-edit-fields">
 				<ui5-label>Date:</ui5-label>
-				<ui5-date-picker bind:this={dialogDatePicker} format-pattern="dd/MM/yyyy" value={itemEditDate} />
+				<ui5-date-picker bind:this={dialogDatePicker} format-pattern="dd/MM/yyyy" value={itemEditDate}></ui5-date-picker>
 			</div>
 		</div>
 
 		<div class="dialog-footer" data-ui5-slot="footer">
-			<ui5-button class="dialog-footer-btn--cancel" design="Transparent" on:click={cancelEdits}>Cancel</ui5-button>
-			<ui5-button class="dialog-footer-btn--save" design="Emphasized" on:click={saveEdits}>Save</ui5-button>
+			<ui5-button class="dialog-footer-btn--cancel" design="Transparent" onclick={cancelEdits}>Cancel</ui5-button>
+			<ui5-button class="dialog-footer-btn--save" design="Emphasized" onclick={saveEdits}>Save</ui5-button>
 		</div>
 	</ui5-dialog>
 
 	<ui5-popover bind:this={themeSettingsPopover} class="app-bar-theming-popover" placement="Bottom" horizontal-align="End" header-text="Theme">
-		<ui5-list selection-mode="Single" on:selection-change={handleThemeChange}>
+		<ui5-list selection-mode="Single" onselection-change={handleThemeChange}>
 			<ui5-li icon="palette" data-theme="sap_horizon" selected>SAP Horizon Morning</ui5-li>
 			<ui5-li icon="palette" data-theme="sap_horizon_dark">SAP Horizon Evening</ui5-li>
 			<ui5-li icon="palette" data-theme="sap_horizon_hcb">SAP Horizon HCB</ui5-li>
@@ -280,7 +280,7 @@
 
 	<ui5-popover bind:this={profileSettingsPopover} id="profile-pop" class="app-bar-profile-popover" placement="Bottom" horizontal-align="End">
 		<div class="profile-settings">
-			<ui5-avatar size="M" initials="JD" />
+			<ui5-avatar size="M" initials="JD"></ui5-avatar>
 			<div class="profile-text">
 				<ui5-title level="H3">John Doe</ui5-title>
 				<ui5-label>Svelte Developer</ui5-label>
@@ -288,7 +288,7 @@
 		</div>
 
 		<div class="profile-settings-list">
-			<ui5-list selection-mode="Single" separators="None" on:item-click={handleProfileSettingsSelect} bind:this={profileSettingsPopover}>
+			<ui5-list selection-mode="Single" separators="None" onitem-click={handleProfileSettingsSelect} bind:this={profileSettingsPopover}>
 				<ui5-li icon="settings" data-key="settings">Settings</ui5-li>
 				<ui5-li icon="sys-help" data-key="help">Help</ui5-li>
 				<ui5-li icon="log" data-key="sign-out">Sign out</ui5-li>
@@ -302,7 +302,7 @@
 				<div class="profile-rtl-switch-title">
 					<ui5-label class="profile-rtl-switch-text">RTL</ui5-label>
 				</div>
-				<ui5-switch on:change={handleRtlSwitchChange} />
+				<ui5-switch onchange={handleRtlSwitchChange}></ui5-switch>
 			</div>
 		</div>
 
@@ -310,17 +310,17 @@
 			<div class="profile-rtl-switch-title">
 				<ui5-label class="profile-rtl-switch-text">Compact</ui5-label>
 			</div>
-			<ui5-switch on:change={handleContentDensitySwitchChange} />
+			<ui5-switch onchange={handleContentDensitySwitchChange}></ui5-switch>
 		</div>
 
 		<div class="dialog-button">
-			<ui5-button on:click={handleSettingsDialogCloseButtonClick} design="Emphasized">Close</ui5-button>
+			<ui5-button onclick={handleSettingsDialogCloseButtonClick} design="Emphasized">Close</ui5-button>
 		</div>
 	</ui5-dialog>
 
 	<ui5-dialog id="help-dialog">
 		<div slot="header" class="help-header" id="header-title-align">
-			<ui5-icon name="sys-help" />
+			<ui5-icon name="sys-help"></ui5-icon>
 			Help
 		</div>
 
@@ -342,7 +342,7 @@
 		<span class="help-dialog-text">For more information, please visit our <a href="https://github.com/UI5/sample-webcomponents-svelte" target="_blank">documentation</a>.</span>
 		<p />
 		<div class="dialog-button">
-			<ui5-button design="Emphasized" on:click={handleHelpDialogCloseButtonClick}>Close</ui5-button>
+			<ui5-button design="Emphasized" onclick={handleHelpDialogCloseButtonClick}>Close</ui5-button>
 		</div>
 	</ui5-dialog>
 </main>

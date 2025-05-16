@@ -1,13 +1,20 @@
 <script lang="ts">
+	import { createBubbler } from 'svelte/legacy';
+
+	const bubble = createBubbler();
 	import "@ui5/webcomponents/dist/List";
 
 	import TodoItem from "./TodoItem.svelte";
 	import type { TodoItemT } from "../types/TodoItem.type";
 
-	export let items: TodoItemT[];
+	interface Props {
+		items: TodoItemT[];
+	}
+
+	let { items }: Props = $props();
 </script>
 
-<ui5-list selection-mode="Multiple" on:selection-change>
+<ui5-list selection-mode="Multiple" onselection-change={bubble('selection-change')}>
 	{#each items as item (item.id)}
 		<TodoItem {item} datakey={item.id} on:item-edit on:item-delete />
 	{/each}

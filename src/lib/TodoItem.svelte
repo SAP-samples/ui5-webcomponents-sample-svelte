@@ -3,9 +3,14 @@
 	import "@ui5/webcomponents/dist/ListItemCustom";
 	import type { TodoItemT } from "../types/TodoItem.type";
 
-	// Props
-	export let item: TodoItemT;
-	export let datakey: number;
+	
+	interface Props {
+		// Props
+		item: TodoItemT;
+		datakey: number;
+	}
+
+	let { item, datakey }: Props = $props();
 
 	// Events do not bubble from nested components
 	// in svelte, we must dispatch them
@@ -28,8 +33,8 @@
 	<div class="li-content">
 		<span class="li-content-text">{item.desc} - finish before: {item.deadline}</span>
 		<div class="li-content-actions">
-			<ui5-button class="edit-btn" on:click={handleEditPress}>Edit</ui5-button>
-			<ui5-button design="Negative" on:click={handleDeletePress}>Delete</ui5-button>
+			<ui5-button class="edit-btn" onclick={handleEditPress}>Edit</ui5-button>
+			<ui5-button design="Negative" onclick={handleDeletePress}>Delete</ui5-button>
 		</div>
 	</div>
 </ui5-li-custom>
