@@ -31,6 +31,7 @@
 	import type { TodoItemT } from "./types/TodoItem.type";
 	import { references } from "./stores/stores.svelte";
 	import Dialog from "@ui5/webcomponents/dist/Dialog.js";
+	import Popover from "@ui5/webcomponents/dist/Popover.js";
 
 	setTheme("sap_horizon");
 
@@ -41,7 +42,7 @@
 	let dialog = $state<Dialog | null>();
 	let dialogTextArea = $state();
 	let dialogDatePicker = $state();
-	let themeSettingsPopover = $state();
+	let themeSettingsPopover = $state<Popover | null>(null);
 	let profileSettingsPopover = $state();
 
 	// Create ToDo Fields
@@ -56,13 +57,17 @@
 	// Event Handlers
 
 	const handleThemeSettingsToggle = (event) => {
-		themeSettingsPopover.opener = event.detail.targetRef;
-		themeSettingsPopover.open = true;
+		if (themeSettingsPopover) {
+			themeSettingsPopover.opener = event.detail.targetRef;
+			themeSettingsPopover.open = !themeSettingsPopover.open;
+		}
 	};
 
 	const handleThemeChange = (event) => {
 		setTheme(event.detail.selectedItems[0].getAttribute("data-theme"));
-		themeSettingsPopover = false;
+		if (themeSettingsPopover) {
+			themeSettingsPopover.open = false;
+		}
 	};
 
 	const handleProfileClick = (event) => {
