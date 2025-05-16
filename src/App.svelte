@@ -1,8 +1,7 @@
 <script lang="ts">
 	// UI5  Components
-	import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme";
+	import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
 	import "@ui5/webcomponents-base/dist/features/F6Navigation";
-	import applyDirection from "@ui5/webcomponents-base/dist/locale/applyDirection.js";
 
 	import "@ui5/webcomponents/dist/Button";
 	import "@ui5/webcomponents/dist/Input";
@@ -13,8 +12,6 @@
 	import "@ui5/webcomponents/dist/Popover";
 	import "@ui5/webcomponents/dist/Tab";
 	import "@ui5/webcomponents/dist/TabContainer";
-	import "@ui5/webcomponents-fiori/dist/ShellBar";
-	import "@ui5/webcomponents-fiori/dist/ShellBarItem";
 	import "@ui5/webcomponents-fiori/dist/Assets.js";
 	import "@ui5/webcomponents/dist/Switch";
 	import "@ui5/webcomponents-icons/dist/palette.js";
@@ -27,23 +24,18 @@
 	import "@ui5/webcomponents-icons/dist/globe.js";
 	import TodoList from "./lib/TodoList.svelte";
 	import { todos, doneTodos } from "./stores/stores";
-	import logo from "./assets/imgs/UI5-orange-pheonix-logo.png";
 	import type { TodoItemT } from "./types/TodoItem.type";
-	import { references } from "./stores/stores.svelte";
 	import Dialog from "@ui5/webcomponents/dist/Dialog.js";
-	import Popover from "@ui5/webcomponents/dist/Popover.js";
+	import Header from "./lib/Header.svelte";
 
 	setTheme("sap_horizon");
 
-	const shellBarTitle: string = "UI5 Web Components Svelte Sample Application";
 	const dialogHeaderText: string = "Edit Todo";
 
 	// Elements
 	let dialog = $state<Dialog | null>();
 	let dialogTextArea = $state();
 	let dialogDatePicker = $state();
-	let themeSettingsPopover = $state<Popover | null>(null);
-	let profileSettingsPopover = $state<Popover | null>(null);
 
 	// Create ToDo Fields
 	let itemInputValue;
@@ -55,65 +47,6 @@
 	let selectedEditItem: number;
 
 	// Event Handlers
-
-	const handleThemeSettingsToggle = (event) => {
-		if (themeSettingsPopover) {
-			themeSettingsPopover.opener = event.detail.targetRef;
-			themeSettingsPopover.open = !themeSettingsPopover.open;
-		}
-	};
-
-	const handleThemeChange = (event) => {
-		setTheme(event.detail.selectedItems[0].getAttribute("data-theme"));
-		if (themeSettingsPopover) {
-			themeSettingsPopover.open = false;
-		}
-	};
-
-	const handleProfileClick = (event) => {
-		if (profileSettingsPopover) {
-			profileSettingsPopover.opener = event.detail.targetRef;
-			profileSettingsPopover.open = !profileSettingsPopover.open;
-		}
-	};
-
-	const handleProfileSettingsSelect = (event) => {
-		const selectedKey = event.detail.item.getAttribute("data-key");
-		if (selectedKey === "settings") {
-			if (references.dialog.settings) {
-				references.dialog.settings.open = true;
-			}
-		} else if (selectedKey === "help") {
-			if (references.dialog.help) {
-				references.dialog.help.open = true;
-			}
-		}
-	};
-
-	const handleRtlSwitchChange = (event) => {
-		document.body.dir = event.target.checked ? "rtl" : "ltr";
-		applyDirection();
-	};
-
-	const handleContentDensitySwitchChange = (event) => {
-		if (event.target.checked) {
-			document.body.classList.add("ui5-content-density-compact");
-		} else {
-			document.body.classList.remove("ui5-content-density-compact");
-		}
-	};
-
-	const handleSettingsDialogCloseButtonClick = () => {
-		if (references.dialog.settings) {
-			references.dialog.settings.open = false;
-		}
-	};
-
-	const handleHelpDialogCloseButtonClick = () => {
-		if (references.dialog.help) {
-			references.dialog.help.open = false;
-		}
-	};
 
 	const handleItemInput = (event) => {
 		itemInputValue = event.target.value;
@@ -237,13 +170,7 @@
 </script>
 
 <main class="app">
-	<header class="app-header">
-		<ui5-shellbar primary-title={shellBarTitle} show-notifications notifications-count="2" onprofile-click={handleProfileClick}>
-			<img class="app-header-logo" slot="logo" src={logo} alt="ui5 orange pheonix logo" />
-			<ui5-shellbar-item icon="palette" text="Theme" onclick={handleThemeSettingsToggle}></ui5-shellbar-item>
-			<ui5-avatar slot="profile" size="XS" initials="JD"></ui5-avatar>
-		</ui5-shellbar>
-	</header>
+	<Header />
 
 	<ui5-tabcontainer collapsed>
 		<ui5-tab text="My Todos"></ui5-tab>
@@ -400,15 +327,6 @@
 		width: calc(100% - 2rem);
 	}
 
-	.app-header-logo {
-		height: 2rem;
-		max-height: 2rem;
-	}
-
-	.app-bar-theming-popover {
-		width: 250px;
-	}
-
 	.create-todo-wrapper {
 		display: flex;
 		align-items: center;
@@ -489,67 +407,5 @@
 		#add-btn {
 			width: 100%;
 		}
-	}
-	.app-bar-profile-popover {
-		width: 250px;
-	}
-
-	#settings-dialog {
-		max-width: 300px;
-	}
-
-	.dialog-button {
-		display: flex;
-		justify-content: flex-end;
-		margin-top: 0.625rem;
-		margin-bottom: -0.425rem;
-	}
-
-	.profile-settings,
-	.help-header {
-		display: flex;
-		flex-direction: row;
-		justify-content: flex-start;
-	}
-
-	.profile-text {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		margin-inline-start: 1rem;
-	}
-
-	.app-header-logo {
-		height: 2rem;
-	}
-
-	.profile-settings-list {
-		margin-top: 1.25rem;
-	}
-
-	.help-dialog-text {
-		font-size: 0.875rem;
-	}
-
-	.profile-rtl-switch {
-		width: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	}
-
-	#header-title-align {
-		margin: 1rem 0;
-		gap: 0.225rem;
-	}
-
-	#header-logo-align {
-		margin: 0.225rem 3.225rem 0.225rem 0;
-		align-items: center;
-		gap: 0.435rem;
-	}
-
-	#help-dialog::part(header) {
-		justify-content: flex-start;
 	}
 </style>
