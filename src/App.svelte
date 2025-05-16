@@ -30,6 +30,7 @@
 	import logo from "./assets/imgs/UI5-orange-pheonix-logo.png";
 	import type { TodoItemT } from "./types/TodoItem.type";
 	import { references } from "./stores/stores.svelte";
+	import Dialog from "@ui5/webcomponents/dist/Dialog.js";
 
 	setTheme("sap_horizon");
 
@@ -37,7 +38,7 @@
 	const dialogHeaderText: string = "Edit Todo";
 
 	// Elements
-	let dialog = $state();
+	let dialog = $state<Dialog | null>();
 	let dialogTextArea = $state();
 	let dialogDatePicker = $state();
 	let themeSettingsPopover = $state();
@@ -187,7 +188,9 @@
 		itemEditDate = todoObj.deadline;
 		selectedEditItem = todoObj.id;
 
-		dialog.open = true;
+		if (dialog) {
+			dialog.open = true;
+		}
 	};
 
 	const saveEdits = () => {
@@ -214,11 +217,15 @@
 			}),
 		);
 
-		dialog.open = false;
+		if (dialog) {
+			dialog.open = false;
+		}
 	};
 
 	const cancelEdits = () => {
-		dialog.open = false;
+		if (dialog) {
+			dialog.open = false;
+		}
 	};
 </script>
 
