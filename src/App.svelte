@@ -43,7 +43,7 @@
 	let dialogTextArea = $state();
 	let dialogDatePicker = $state();
 	let themeSettingsPopover = $state<Popover | null>(null);
-	let profileSettingsPopover = $state();
+	let profileSettingsPopover = $state<Popover | null>(null);
 
 	// Create ToDo Fields
 	let itemInputValue;
@@ -71,8 +71,10 @@
 	};
 
 	const handleProfileClick = (event) => {
-		profileSettingsPopover.opener = event.detail.targetRef;
-		profileSettingsPopover.open = true;
+		if (profileSettingsPopover) {
+			profileSettingsPopover.opener = event.detail.targetRef;
+			profileSettingsPopover.open = !profileSettingsPopover.open;
+		}
 	};
 
 	const handleProfileSettingsSelect = (event) => {
