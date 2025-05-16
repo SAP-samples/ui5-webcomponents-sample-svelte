@@ -72,8 +72,9 @@
 	const handleProfileSettingsSelect = (event) => {
 		const selectedKey = event.detail.item.getAttribute("data-key");
 		if (selectedKey === "settings") {
-			window["settings-dialog"].opener = event.detail.targetRef;
-			window["settings-dialog"].open = true;
+			if (references.dialog.settings) {
+				references.dialog.settings.open = true;
+			}
 		} else if (selectedKey === "help") {
 			if (references.dialog.help) {
 				references.dialog.help.open = true;
@@ -95,7 +96,9 @@
 	};
 
 	const handleSettingsDialogCloseButtonClick = () => {
-		window["settings-dialog"].open = false;
+		if (references.dialog.settings) {
+			references.dialog.settings.open = false;
+		}
 	};
 
 	const handleHelpDialogCloseButtonClick = () => {
@@ -300,7 +303,7 @@
 		</div>
 	</ui5-popover>
 
-	<ui5-dialog id="settings-dialog" header-text="Profile Settings" draggable>
+	<ui5-dialog bind:this={references.dialog.settings} header-text="Profile Settings" draggable>
 		<div>
 			<div class="profile-rtl-switch centered">
 				<div class="profile-rtl-switch-title">
