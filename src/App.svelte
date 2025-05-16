@@ -29,6 +29,7 @@
 	import { todos, doneTodos } from "./stores/stores";
 	import logo from "./assets/imgs/UI5-orange-pheonix-logo.png";
 	import type { TodoItemT } from "./types/TodoItem.type";
+	import { references } from "./stores/stores.svelte";
 
 	setTheme("sap_horizon");
 
@@ -74,8 +75,9 @@
 			window["settings-dialog"].opener = event.detail.targetRef;
 			window["settings-dialog"].open = true;
 		} else if (selectedKey === "help") {
-			window["help-dialog"].opener = event.detail.targetRef;
-			window["help-dialog"].open = true;
+			if (references.dialog.help) {
+				references.dialog.help.open = true;
+			}
 		}
 	};
 
@@ -97,7 +99,9 @@
 	};
 
 	const handleHelpDialogCloseButtonClick = () => {
-		window["help-dialog"].open = false;
+		if (references.dialog.help) {
+			references.dialog.help.open = false;
+		}
 	};
 
 	const handleItemInput = (event) => {
@@ -318,7 +322,7 @@
 		</div>
 	</ui5-dialog>
 
-	<ui5-dialog id="help-dialog">
+	<ui5-dialog bind:this={references.dialog.help}>
 		<div slot="header" class="help-header" id="header-title-align">
 			<ui5-icon name="sys-help"></ui5-icon>
 			Help
