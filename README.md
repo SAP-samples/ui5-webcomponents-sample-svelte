@@ -1,10 +1,11 @@
 ![UI5-logo](docs/imgs/ui5-svelte-logo.png)
 
-[![CI](https://github.com/SAP-samples/ui5-webcomponents-sample-svelte/actions/workflows/ci.yaml/badge.svg)](https://github.com/SAP-samples/ui5-webcomponents-sample-svelte/actions/workflows/ci.yaml)
-[![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/ui5-webcomponents-sample-svelte)](https://api.reuse.software/info/github.com/SAP-samples/ui5-webcomponents-sample-svelte)
+[![CI](https://github.com/UI5/sample-webcomponents-svelte/actions/workflows/ci.yaml/badge.svg)](https://github.com/UI5/sample-webcomponents-svelte/actions/workflows/ci.yaml)
+[![REUSE status](https://api.reuse.software/badge/github.com/UI5/sample-webcomponents-svelte)](https://api.reuse.software/info/github.com/UI5/sample-webcomponents-svelte)
 
 # **UI5 Web Components Sample ToDo App**
-### ***Sample ToDo application that demonstrates the usage of [UI5 Web Components](https://sap.github.io/ui5-webcomponents/) using [Svelte](https://svelte.dev/)***
+
+ ***Sample ToDo application that demonstrates the usage of [UI5 Web Components](https://ui5.github.io/webcomponents/) using [Svelte](https://svelte.dev/)***
 
 The application showcases how to: bind properties, subscribe to and forward events, and consume UI5 Web Components within Svelte.
 
@@ -16,8 +17,8 @@ Project was initialized uising **[ViteJs](https://vitejs.dev/guide/#scaffolding-
 ## **Download and Installation**
 1. **[Clone this repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)** and navigate to the downloaded directory
     ```sh
-    git clone https://github.com/SAP-samples/ui5-webcomponents-sample-svelte.git
-    cd ui5-webcomponents-sample-svelte
+    git clone https://github.com/UI5/sample-webcomponents-svelte.git
+    cd sample-webcomponents-svelte
     ```
 2. Install all dependencies
    ```sh
