@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "build": "vite build --base=/ui5-webcomponents-sample-svelte/",
+    "build": "vite build --base=/sample-webcomponents-svelte/",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "lint": "eslint src",

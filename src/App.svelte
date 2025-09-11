@@ -339,7 +339,7 @@
 			<b>Admin version</b>: Svelte Admin <br />
 		</p>
 		<hr />
-		<span class="help-dialog-text">For more information, please visit our <a href="https://github.com/SAP-samples/ui5-webcomponents-sample-svelte" target="_blank">documentation</a>.</span>
+		<span class="help-dialog-text">For more information, please visit our <a href="https://github.com/UI5/sample-webcomponents-svelte" target="_blank">documentation</a>.</span>
 		<p />
 		<div class="dialog-button">
 			<ui5-button design="Emphasized" on:click={handleHelpDialogCloseButtonClick}>Close</ui5-button>
