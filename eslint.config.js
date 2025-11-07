@@ -46,4 +46,7 @@ export default ts.config(
 			// 'svelte/rule-name': 'error'
 		},
 	},
+	{
+		ignores: ["node_modules/**", "dist/**", "build/**"],
+	},
 );
