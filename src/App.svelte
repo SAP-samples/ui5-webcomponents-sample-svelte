@@ -23,110 +23,100 @@
 	import "@ui5/webcomponents-icons/dist/loan.js";
 	import "@ui5/webcomponents-icons/dist/globe.js";
 	import TodoList from "./lib/TodoList.svelte";
-	import { todos, doneTodos } from "./stores/stores";
-	import type { TodoItemT } from "./types/TodoItem.type";
+	import { todoStore } from "./stores/stores.svelte";
 	import Dialog from "@ui5/webcomponents/dist/Dialog.js";
 	import Header from "./lib/Header.svelte";
+	import type { ListSelectionChangeEventDetail } from "@ui5/webcomponents/dist/List.js";
+	import type { DatePickerChangeEventDetail, DatePickerInputEventDetail } from "@ui5/webcomponents/dist/DatePicker.js";
+	import type { ItemDeleteEvent, ItemEditEvent } from "./lib/todoitem.event";
 
 	setTheme("sap_horizon");
 
-	const dialogHeaderText: string = "Edit Todo";
-
 	// Elements
 	let dialog = $state<Dialog | null>();
-	let dialogTextArea = $state();
-	let dialogDatePicker = $state();
 
-	// Create ToDo Fields
-	let itemInputValue;
-	let itemDateInputValue;
+	let createTodoFields = $state({
+		text: "",
+		date: "",
+	});
 
 	// Edit Dialog fields
-	let itemEditText: string = $state("");
-	let itemEditDate: string = $state("");
-	let selectedEditItem: number;
+	type DialogFields = {
+		id: number | null;
+		text: string;
+		date: string;
+	};
+
+	let dialogFields = $state<DialogFields>({
+		id: null,
+		text: "",
+		date: "",
+	});
 
 	// Event Handlers
 
-	const handleItemInput = (event) => {
-		itemInputValue = event.target.value;
+	const handleItemInput = (event: any) => {
+		createTodoFields.text = event.target?.value;
 	};
 
-	const handleDateInput = (event) => {
-		itemDateInputValue = event.detail.value;
-	};
+	const handleDateInput = (event: CustomEvent<DatePickerInputEventDetail>) => (createTodoFields.date = event.detail.value);
 
-	const handleAdd = (event) => {
-		const newTodo: TodoItemT = {
-			id: $todos.length + 1,
-			desc: itemInputValue,
-			deadline: itemDateInputValue,
-			done: false,
-		};
-		todos.update((todos) => [...todos, newTodo]);
-	};
+	const handleAdd = () =>
+		todoStore.add({
+			desc: createTodoFields.text,
+			deadline: createTodoFields.date,
+		});
 
-	const handleDone = (event) => {
-		const selectedItem = event.detail.selectedItems[0];
-		const selectedId = selectedItem.getAttribute("data-key");
+	const handleToggleDone = (event: CustomEvent<ListSelectionChangeEventDetail>) => {
+		const { selectedItems, previouslySelectedItems } = event.detail;
 
-		const newlySelected = $todos.filter((todo) => {
-			return selectedId === todo.id.toString();
-		})[0];
-
-		newlySelected.done = true;
-
-		doneTodos.update((doneTodos) => [...doneTodos, newlySelected]);
-
-		todos.update((todos) =>
-			todos.filter((todo) => {
-				return selectedId !== todo.id.toString();
-			}),
-		);
-	};
-
-	const handleUndone = (event) => {
-		const selectedItems = event.detail.selectedItems;
-		const selectedIds = selectedItems.map((item) => item.getAttribute("data-key"));
-
-		const newlyDeselected = $doneTodos
-			.filter((todo) => {
-				return selectedIds.indexOf(todo.id.toString()) === -1;
-			})
-			.map((item) => {
-				return { ...item, done: false };
-			});
-
-		doneTodos.update((doneTodos) =>
-			doneTodos.filter((todo) => {
-				return selectedIds.indexOf(todo.id.toString()) > -1;
-			}),
-		);
-
-		todos.update((todos) => [...todos, ...newlyDeselected]);
-	};
-
-	const handleRemove = (event) => {
-		const filteredTodos = $todos.filter((todo) => todo.id !== event.detail.id);
-		todos.set(filteredTodos);
-
-		const filteredDoneTodos = $doneTodos.filter((todo) => todo.id !== event.detail.id);
-		doneTodos.set(filteredDoneTodos);
-	};
-
-	const handleEdit = (event) => {
-		const matchedTodos = $todos.filter((todo) => todo.id === event.detail.id);
-
-		let todoObj;
-		if (matchedTodos.length) {
-			todoObj = matchedTodos[0];
-		} else {
-			todoObj = $doneTodos.filter((todo) => todo.id === event.detail.id)[0];
+		if (selectedItems.length === previouslySelectedItems.length) {
+			// No change in selection
+			return;
 		}
 
-		itemEditText = todoObj.desc;
-		itemEditDate = todoObj.deadline;
-		selectedEditItem = todoObj.id;
+		if (selectedItems.length > previouslySelectedItems.length) {
+			const newlySelectedItems = selectedItems.filter((item) => !previouslySelectedItems.includes(item));
+			if (newlySelectedItems.length === 0) {
+				return;
+			}
+			const newlySelectedItemId = newlySelectedItems[0]?.getAttribute("data-key");
+			if (!newlySelectedItemId) {
+				return;
+			}
+			todoStore.toggleDone(Number(newlySelectedItemId));
+		} else if (selectedItems.length < previouslySelectedItems.length) {
+			const newlyDeselectedItems = previouslySelectedItems.filter((item) => !selectedItems.includes(item));
+			if (newlyDeselectedItems.length === 0) {
+				return;
+			}
+			const newlyDeselectedItemId = newlyDeselectedItems[0]?.getAttribute("data-key");
+			if (!newlyDeselectedItemId) {
+				return;
+			}
+			todoStore.toggleDone(Number(newlyDeselectedItemId));
+		} else {
+			console.debug("Selection not changed");
+		}
+	};
+
+	const handleRemove = (event: CustomEvent<ItemDeleteEvent>) => {
+		todoStore.remove(event.detail.id);
+	};
+
+	const handleEdit = (event: CustomEvent<ItemEditEvent>) => {
+		const matchedTodo = todoStore.todos.find((todo) => todo.id === event.detail.id);
+
+		if (!matchedTodo) {
+			console.warn(`Todo item with id ${event.detail.id} not found.`);
+			return;
+		}
+
+		dialogFields = {
+			id: matchedTodo.id,
+			text: matchedTodo.desc,
+			date: matchedTodo.deadline,
+		};
 
 		if (dialog) {
 			dialog.open = true;
@@ -134,39 +124,32 @@
 	};
 
 	const saveEdits = () => {
-		const edittedText = dialogTextArea.value;
-		const edittedDate = dialogDatePicker.value;
+		if (!dialogFields.id) {
+			console.warn("No valid todo id found for editing.");
+			return;
+		}
 
-		todos.update((todos) =>
-			todos.map((todo) => {
-				if (todo.id === selectedEditItem) {
-					todo.desc = edittedText;
-					todo.deadline = edittedDate;
-				}
-				return todo;
-			}),
-		);
-
-		doneTodos.update((doneTodos) =>
-			doneTodos.map((todo) => {
-				if (todo.id === selectedEditItem) {
-					todo.desc = edittedText;
-					todo.deadline = edittedDate;
-				}
-				return todo;
-			}),
-		);
+		todoStore.update(dialogFields.id, {
+			desc: dialogFields.text,
+			deadline: dialogFields.date,
+		});
 
 		if (dialog) {
+			dialogFields = { id: null, text: "", date: "" };
 			dialog.open = false;
 		}
 	};
 
 	const cancelEdits = () => {
 		if (dialog) {
+			dialogFields = { id: null, text: "", date: "" };
 			dialog.open = false;
 		}
 	};
+
+	// Derived Stores
+	const doneTodos = $derived(todoStore.todos.filter((t) => t.done));
+	const undoneTodos = $derived(todoStore.todos.filter((t) => !t.done));
 </script>
 
 <main class="app">
@@ -180,117 +163,41 @@
 		<div class="create-todo-wrapper">
 			<ui5-input id="add-input" oninput={handleItemInput} placeholder="Type a task..."></ui5-input>
 			<ui5-date-picker id="date-picker" oninput={handleDateInput} onchange={handleDateInput} format-pattern="dd/MM/yyyy"></ui5-date-picker>
-			<ui5-button id="add-btn" onclick={handleAdd} design="Emphasized"> Add Todo </ui5-button>
+			<ui5-button type="button" id="add-btn" onclick={handleAdd} design="Emphasized">Add Todo</ui5-button>
 		</div>
 
 		<section class="list-todo-wrapper">
-			<ui5-panel class="list-todos-panel" header-text="Incompleted Tasks" collapsed={!$todos.length || undefined}>
-				<TodoList items={$todos} on:item-edit={handleEdit} on:item-delete={handleRemove} on:selection-change={handleDone} />
+			<ui5-panel class="list-todos-panel" header-text="Incompleted Tasks" collapsed={!undoneTodos.length || undefined}>
+				<TodoList items={undoneTodos} on:item-edit={handleEdit} on:item-delete={handleRemove} on:selection-change={handleToggleDone} />
 			</ui5-panel>
 
-			<ui5-panel class="list-todos-panel" header-text="Completed Tasks" collapsed={!$todos.length || undefined}>
-				<TodoList items={$doneTodos} on:item-edit={handleEdit} on:item-delete={handleRemove} on:selection-change={handleUndone} />
+			<ui5-panel class="list-todos-panel" header-text="Completed Tasks" collapsed={!doneTodos.length || undefined}>
+				<TodoList items={doneTodos} on:item-edit={handleEdit} on:item-delete={handleRemove} on:selection-change={handleToggleDone} />
 			</ui5-panel>
 		</section>
 	</section>
 
-	<ui5-dialog bind:this={dialog} header-text={dialogHeaderText}>
+	<ui5-dialog bind:this={dialog} header-text="Edit Todo">
 		<div class="dialog-content">
 			<div class="edit-wrapper">
 				<ui5-label>Title:</ui5-label>
-				<ui5-textarea class="title-textarea" show-exceeded-text maxlength="24" bind:this={dialogTextArea} value={itemEditText}></ui5-textarea>
+				<ui5-textarea class="title-textarea" show-exceeded-text maxlength={24} value={dialogFields.text} onchange={(event: any) => (dialogFields.text = event.target.value)}></ui5-textarea>
 			</div>
 
 			<div class="edit-wrapper date-edit-fields">
 				<ui5-label>Date:</ui5-label>
-				<ui5-date-picker bind:this={dialogDatePicker} format-pattern="dd/MM/yyyy" value={itemEditDate}></ui5-date-picker>
+				<ui5-date-picker
+					bind:this={dialogFields.date}
+					format-pattern="dd/MM/yyyy"
+					value={dialogFields.date}
+					onchange={(event: CustomEvent<DatePickerChangeEventDetail>) => (dialogFields.date = event.detail.value)}
+				></ui5-date-picker>
 			</div>
 		</div>
 
 		<div class="dialog-footer" data-ui5-slot="footer">
 			<ui5-button class="dialog-footer-btn--cancel" design="Transparent" onclick={cancelEdits}>Cancel</ui5-button>
 			<ui5-button class="dialog-footer-btn--save" design="Emphasized" onclick={saveEdits}>Save</ui5-button>
-		</div>
-	</ui5-dialog>
-
-	<ui5-popover bind:this={themeSettingsPopover} class="app-bar-theming-popover" placement="Bottom" horizontal-align="End" header-text="Theme">
-		<ui5-list selection-mode="Single" onselection-change={handleThemeChange}>
-			<ui5-li icon="palette" data-theme="sap_horizon" selected>SAP Horizon Morning</ui5-li>
-			<ui5-li icon="palette" data-theme="sap_horizon_dark">SAP Horizon Evening</ui5-li>
-			<ui5-li icon="palette" data-theme="sap_horizon_hcb">SAP Horizon HCB</ui5-li>
-			<ui5-li icon="palette" data-theme="sap_horizon_hcw">SAP Horizon HCW</ui5-li>
-			<ui5-li icon="palette" data-theme="sap_fiori_3">SAP Quartz Light</ui5-li>
-			<ui5-li icon="palette" data-theme="sap_fiori_3_dark">SAP Quartz Dark</ui5-li>
-			<ui5-li icon="palette" data-theme="sap_fiori_3_hcb">SAP Quartz HCB</ui5-li>
-			<ui5-li icon="palette" data-theme="sap_fiori_3_hcw">SAP Quartz HCW</ui5-li>
-		</ui5-list>
-	</ui5-popover>
-
-	<ui5-popover bind:this={profileSettingsPopover} id="profile-pop" class="app-bar-profile-popover" placement="Bottom" horizontal-align="End">
-		<div class="profile-settings">
-			<ui5-avatar size="M" initials="JD"></ui5-avatar>
-			<div class="profile-text">
-				<ui5-title level="H3">John Doe</ui5-title>
-				<ui5-label>Svelte Developer</ui5-label>
-			</div>
-		</div>
-
-		<div class="profile-settings-list">
-			<ui5-list selection-mode="Single" separators="None" onitem-click={handleProfileSettingsSelect} bind:this={profileSettingsPopover}>
-				<ui5-li icon="settings" data-key="settings">Settings</ui5-li>
-				<ui5-li icon="sys-help" data-key="help">Help</ui5-li>
-				<ui5-li icon="log" data-key="sign-out">Sign out</ui5-li>
-			</ui5-list>
-		</div>
-	</ui5-popover>
-
-	<ui5-dialog bind:this={references.dialog.settings} header-text="Profile Settings" draggable>
-		<div>
-			<div class="profile-rtl-switch centered">
-				<div class="profile-rtl-switch-title">
-					<ui5-label class="profile-rtl-switch-text">RTL</ui5-label>
-				</div>
-				<ui5-switch onchange={handleRtlSwitchChange}></ui5-switch>
-			</div>
-		</div>
-
-		<div class="profile-rtl-switch centered">
-			<div class="profile-rtl-switch-title">
-				<ui5-label class="profile-rtl-switch-text">Compact</ui5-label>
-			</div>
-			<ui5-switch onchange={handleContentDensitySwitchChange}></ui5-switch>
-		</div>
-
-		<div class="dialog-button">
-			<ui5-button onclick={handleSettingsDialogCloseButtonClick} design="Emphasized">Close</ui5-button>
-		</div>
-	</ui5-dialog>
-
-	<ui5-dialog bind:this={references.dialog.help}>
-		<div slot="header" class="help-header" id="header-title-align">
-			<ui5-icon name="sys-help"></ui5-icon>
-			Help
-		</div>
-
-		<div class="help-header" id="header-logo-align">
-			<img class="app-header-logo" alt="logo" slot="logo" src={logo} />
-			<ui5-title level="H5">UI5 Web Components Svelte Sample App</ui5-title>
-		</div>
-
-		<p class="help-dialog-text">
-			<b>Release</b>: b225.20220729335 <br />
-			<b>Server</b>: pk21443x3132 <br />
-			<b>Timestamp</b>: 2022-08-18T10:29:03.159+0200 <br />
-			<b>Company ID</b>: SAP <br />
-			<b>UI version</b>: SAP Fiori <br />
-			<b>Edition</b>: Enterprise <br />
-			<b>Admin version</b>: Svelte Admin <br />
-		</p>
-		<hr />
-		<span class="help-dialog-text">For more information, please visit our <a href="https://github.com/UI5/sample-webcomponents-svelte" target="_blank">documentation</a>.</span>
-		<p />
-		<div class="dialog-button">
-			<ui5-button design="Emphasized" onclick={handleHelpDialogCloseButtonClick}>Close</ui5-button>
 		</div>
 	</ui5-dialog>
 </main>

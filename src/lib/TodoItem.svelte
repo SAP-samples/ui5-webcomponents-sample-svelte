@@ -2,8 +2,8 @@
 	import { createEventDispatcher } from "svelte";
 	import "@ui5/webcomponents/dist/ListItemCustom";
 	import type { TodoItemT } from "../types/TodoItem.type";
+	import type { ItemEditEvent, ItemDeleteEvent } from "./todoitem.event";
 
-	
 	interface Props {
 		// Props
 		item: TodoItemT;
@@ -17,15 +17,17 @@
 	const dispatcher = createEventDispatcher();
 
 	const handleEditPress = () => {
-		dispatcher("item-edit", {
+		const event: ItemEditEvent = {
 			id: item.id,
-		});
+		};
+		dispatcher<string>("item-edit", event);
 	};
 
 	const handleDeletePress = () => {
-		dispatcher("item-delete", {
+		const event: ItemDeleteEvent = {
 			id: item.id,
-		});
+		};
+		dispatcher("item-delete", event);
 	};
 </script>
 

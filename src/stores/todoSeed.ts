@@ -1,6 +1,6 @@
-import { writable } from "svelte/store";
+import type { TodoItemT } from "src/types/TodoItem.type";
 
-const defaultTodos = [
+export const defaultTodos: Array<TodoItemT> = [
 	{
 		id: 1,
 		desc: "Get some carrots",
@@ -25,11 +25,6 @@ const defaultTodos = [
 		deadline: "30/7/2018",
 		done: false,
 	},
-];
-
-export const todos = writable(defaultTodos);
-
-const defaultDoneTodos = [
 	{
 		id: 5,
 		desc: "Eat some fruits",
@@ -37,5 +32,3 @@ const defaultDoneTodos = [
 		done: true,
 	},
 ];
-
-export const doneTodos = writable(defaultDoneTodos);

@@ -1,41 +1,5 @@
-import type { TodoItemT } from "src/types/TodoItem.type";
-import Dialog from "@ui5/webcomponents/dist/Dialog.js";
-
-const defaultTodos: Array<TodoItemT> = [
-	{
-		id: 1,
-		desc: "Get some carrots",
-		deadline: "27/7/2018",
-		done: false,
-	},
-	{
-		id: 2,
-		desc: "Do some magic",
-		deadline: "22/7/2018",
-		done: false,
-	},
-	{
-		id: 3,
-		desc: "Go to the gym",
-		deadline: "24/7/2018",
-		done: false,
-	},
-	{
-		id: 4,
-		desc: "Buy milk",
-		deadline: "30/7/2018",
-		done: false,
-	},
-];
-
-const defaultDoneTodos: Array<TodoItemT> = [
-	{
-		id: 5,
-		desc: "Eat some fruits",
-		deadline: "29/7/2018",
-		done: true,
-	},
-];
+import type Dialog from "@ui5/webcomponents/dist/Dialog.js";
+import { defaultTodos } from "./todoSeed";
 
 type TodoItemType = {
 	id: number;
@@ -44,31 +8,31 @@ type TodoItemType = {
 	done: boolean;
 };
 
-class TodoStore<T extends TodoItemType> {
-	#todos = $state<T[]>([]);
+class TodoStore {
+	#todos = $state<TodoItemType[]>([]);
 
-	constructor(todos: T[]) {
+	constructor(todos: TodoItemType[]) {
 		this.#todos = todos;
 	}
 
-	public get todos(): T[] {
+	public get todos(): TodoItemType[] {
 		return this.#todos;
 	}
 
-	add(newTodo: Pick<T, "deadline" | "desc">) {
+	add(newTodo: Pick<TodoItemType, "deadline" | "desc">) {
+		const largestId = this.#todos.map((t) => t.id).reduce((a, b) => Math.max(a, b), 0);
+
 		const item = {
 			...newTodo,
-			id: this.todos.length,
+			id: largestId + 1,
 			done: false,
 		};
 
 		this.todos.push(item);
 	}
 
-	toggleDone(id: T["id"]) {
+	toggleDone(id: TodoItemType["id"]) {
 		const item = this.#todos.find((t) => t.id === id);
-
-		console.log(item, id);
 
 		if (item) {
 			this.#todos = [
@@ -81,20 +45,27 @@ class TodoStore<T extends TodoItemType> {
 		}
 	}
 
-	remove(id: T["id"]) {
+	remove(id: TodoItemType["id"]) {
 		this.#todos = this.#todos.filter((t) => t.id !== id);
 	}
 
-	update(id: T["id"], updatedItem: T) {
+	update(id: TodoItemType["id"], item: Partial<Omit<TodoItemType, "id">>) {
 		const oldItem = this.#todos.find((t) => t.id === id);
 
-		if (oldItem) {
-			this.#todos = [...this.#todos.filter((t) => t.id !== id), updatedItem];
+		if (!oldItem) {
+			return;
 		}
+
+		const updatedItem = {
+			...oldItem,
+			...item,
+		};
+
+		this.#todos = [...this.#todos.filter((t) => t.id !== id), updatedItem];
 	}
 }
 
-export const todoStore = new TodoStore<TodoItemType>([...defaultTodos, ...defaultDoneTodos]);
+export const todoStore = new TodoStore(defaultTodos);
 
 interface ElementReferences {
 	dialog: {
