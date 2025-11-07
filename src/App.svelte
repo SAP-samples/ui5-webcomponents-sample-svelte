@@ -23,8 +23,7 @@
 	import "@ui5/webcomponents-icons/dist/loan.js";
 	import "@ui5/webcomponents-icons/dist/globe.js";
 	import TodoList from "./lib/TodoList.svelte";
-	import { todoStore } from "./stores/stores.svelte";
-	import Dialog from "@ui5/webcomponents/dist/Dialog.js";
+	import { references, todoStore } from "./stores/stores.svelte";
 	import Header from "./lib/Header.svelte";
 	import type { ListSelectionChangeEventDetail } from "@ui5/webcomponents/dist/List.js";
 	import type { DatePickerChangeEventDetail, DatePickerInputEventDetail } from "@ui5/webcomponents/dist/DatePicker.js";
@@ -33,7 +32,6 @@
 	setTheme("sap_horizon");
 
 	// Elements
-	let dialog = $state<Dialog | null>();
 
 	let createTodoFields = $state({
 		text: "",
@@ -118,8 +116,8 @@
 			date: matchedTodo.deadline,
 		};
 
-		if (dialog) {
-			dialog.open = true;
+		if (references.dialog.editDialog) {
+			references.dialog.editDialog.open = true;
 		}
 	};
 
@@ -134,16 +132,16 @@
 			deadline: dialogFields.date,
 		});
 
-		if (dialog) {
+		if (references.dialog.editDialog) {
 			dialogFields = { id: null, text: "", date: "" };
-			dialog.open = false;
+			references.dialog.editDialog.open = false;
 		}
 	};
 
 	const cancelEdits = () => {
-		if (dialog) {
+		if (references.dialog.editDialog) {
 			dialogFields = { id: null, text: "", date: "" };
-			dialog.open = false;
+			references.dialog.editDialog.open = false;
 		}
 	};
 
@@ -190,7 +188,7 @@
 		</section>
 	</section>
 
-	<ui5-dialog bind:this={dialog} header-text="Edit Todo">
+	<ui5-dialog bind:this={references.dialog.editDialog} header-text="Edit Todo">
 		<div class="dialog-content">
 			<div class="edit-wrapper">
 				<ui5-label>Title:</ui5-label>

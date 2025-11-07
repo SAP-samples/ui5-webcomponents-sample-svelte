@@ -69,6 +69,9 @@ export const todoStore = new TodoStore(defaultTodos);
 
 interface ElementReferences {
 	dialog: {
+		settingsDialog: Dialog | null;
+		helpDialog: Dialog | null;
+		editDialog: Dialog | null;
 		[key: string]: Dialog | null;
 	};
 }
@@ -77,5 +80,6 @@ export const references = $state<ElementReferences>({
 	dialog: {
 		settingsDialog: null,
 		helpDialog: null,
+		editDialog: null,
 	},
 });
