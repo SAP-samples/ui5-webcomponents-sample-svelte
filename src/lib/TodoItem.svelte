@@ -26,8 +26,30 @@
 	<div class="li-content">
 		<span class="li-content-text">{item.desc} - finish before: {item.deadline}</span>
 		<div class="li-content-actions">
-			<ui5-button class="edit-btn" onclick={handleEditPress}>Edit</ui5-button>
-			<ui5-button design="Negative" onclick={handleDeletePress}>Delete</ui5-button>
+			<ui5-button
+				role="button"
+				tabindex="0"
+				class="edit-btn"
+				onclick={handleEditPress}
+				onkeydown={(e: KeyboardEvent) => {
+					if (e.key === "Enter" || e.key === " ") {
+						handleEditPress();
+						e.preventDefault();
+					}
+				}}>Edit</ui5-button
+			>
+			<ui5-button
+				role="button"
+				tabindex="0"
+				design="Negative"
+				onclick={handleDeletePress}
+				onkeydown={(e: KeyboardEvent) => {
+					if (e.key === "Enter" || e.key === " ") {
+						handleDeletePress();
+						e.preventDefault();
+					}
+				}}>Delete</ui5-button
+			>
 		</div>
 	</div>
 </ui5-li-custom>

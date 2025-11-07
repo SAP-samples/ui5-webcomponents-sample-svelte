@@ -163,7 +163,20 @@
 		<div class="create-todo-wrapper">
 			<ui5-input id="add-input" oninput={handleItemInput} placeholder="Type a task..."></ui5-input>
 			<ui5-date-picker id="date-picker" oninput={handleDateInput} onchange={handleDateInput} format-pattern="dd/MM/yyyy"></ui5-date-picker>
-			<ui5-button type="button" id="add-btn" onclick={handleAdd} design="Emphasized">Add Todo</ui5-button>
+			<ui5-button
+				tabindex="0"
+				role="button"
+				type="button"
+				id="add-btn"
+				onclick={handleAdd}
+				onkeydown={(e: KeyboardEvent) => {
+					if (e.key === "Enter" || e.key === " ") {
+						handleAdd();
+						e.preventDefault();
+					}
+				}}
+				design="Emphasized">Add Todo</ui5-button
+			>
 		</div>
 
 		<section class="list-todo-wrapper">
@@ -196,8 +209,34 @@
 		</div>
 
 		<div class="dialog-footer" data-ui5-slot="footer">
-			<ui5-button class="dialog-footer-btn--cancel" design="Transparent" onclick={cancelEdits}>Cancel</ui5-button>
-			<ui5-button class="dialog-footer-btn--save" design="Emphasized" onclick={saveEdits}>Save</ui5-button>
+			<ui5-button
+				class="dialog-footer-btn--cancel"
+				role="button"
+				tabindex="0"
+				design="Transparent"
+				onclick={cancelEdits}
+				onkeydown={(e: KeyboardEvent) => {
+					if (e.key === "Enter" || e.key === " ") {
+						cancelEdits();
+						e.preventDefault();
+					}
+				}}
+			>
+				Cancel
+			</ui5-button>
+			<ui5-button
+				class="dialog-footer-btn--save"
+				role="button"
+				tabindex="0"
+				design="Emphasized"
+				onclick={saveEdits}
+				onkeydown={(e: KeyboardEvent) => {
+					if (e.key === "Enter" || e.key === " ") {
+						saveEdits();
+						e.preventDefault();
+					}
+				}}>Save</ui5-button
+			>
 		</div>
 	</ui5-dialog>
 </main>
