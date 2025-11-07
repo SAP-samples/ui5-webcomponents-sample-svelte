@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { createEventDispatcher } from "svelte";
 	import "@ui5/webcomponents/dist/ListItemCustom";
 	import type { TodoItemT } from "../types/TodoItem.type";
 	import type { ItemEditEvent, ItemDeleteEvent } from "./todoitem.event";
@@ -8,26 +7,18 @@
 		// Props
 		item: TodoItemT;
 		datakey: number;
+		onDelete(item: ItemDeleteEvent): void;
+		onEdit(item: ItemEditEvent): void;
 	}
 
-	let { item, datakey }: Props = $props();
-
-	// Events do not bubble from nested components
-	// in svelte, we must dispatch them
-	const dispatcher = createEventDispatcher();
+	let { item, datakey, onEdit, onDelete }: Props = $props();
 
 	const handleEditPress = () => {
-		const event: ItemEditEvent = {
-			id: item.id,
-		};
-		dispatcher<string>("item-edit", event);
+		onEdit({ id: item.id });
 	};
 
 	const handleDeletePress = () => {
-		const event: ItemDeleteEvent = {
-			id: item.id,
-		};
-		dispatcher("item-delete", event);
+		onDelete({ id: item.id });
 	};
 </script>
 

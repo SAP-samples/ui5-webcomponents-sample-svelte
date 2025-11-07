@@ -100,15 +100,15 @@
 		}
 	};
 
-	const handleRemove = (event: CustomEvent<ItemDeleteEvent>) => {
-		todoStore.remove(event.detail.id);
+	const handleRemove = (item: ItemDeleteEvent) => {
+		todoStore.remove(item.id);
 	};
 
-	const handleEdit = (event: CustomEvent<ItemEditEvent>) => {
-		const matchedTodo = todoStore.todos.find((todo) => todo.id === event.detail.id);
+	const handleEdit = (item: ItemEditEvent) => {
+		const matchedTodo = todoStore.todos.find((todo) => todo.id === item.id);
 
 		if (!matchedTodo) {
-			console.warn(`Todo item with id ${event.detail.id} not found.`);
+			console.warn(`Todo item with id ${item.id} not found.`);
 			return;
 		}
 
@@ -168,11 +168,11 @@
 
 		<section class="list-todo-wrapper">
 			<ui5-panel class="list-todos-panel" header-text="Incompleted Tasks" collapsed={!undoneTodos.length || undefined}>
-				<TodoList items={undoneTodos} on:item-edit={handleEdit} on:item-delete={handleRemove} on:selection-change={handleToggleDone} />
+				<TodoList items={undoneTodos} onEdit={handleEdit} onDelete={handleRemove} onSelectionChange={handleToggleDone} />
 			</ui5-panel>
 
 			<ui5-panel class="list-todos-panel" header-text="Completed Tasks" collapsed={!doneTodos.length || undefined}>
-				<TodoList items={doneTodos} on:item-edit={handleEdit} on:item-delete={handleRemove} on:selection-change={handleToggleDone} />
+				<TodoList items={doneTodos} onEdit={handleEdit} onDelete={handleRemove} onSelectionChange={handleToggleDone} />
 			</ui5-panel>
 		</section>
 	</section>
