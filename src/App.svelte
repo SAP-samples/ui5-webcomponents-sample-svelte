@@ -28,6 +28,8 @@
 	import type { ListSelectionChangeEventDetail } from "@ui5/webcomponents/dist/List.js";
 	import type { DatePickerChangeEventDetail, DatePickerInputEventDetail } from "@ui5/webcomponents/dist/DatePicker.js";
 	import type { ItemDeleteEvent, ItemEditEvent } from "./lib/todoitem.event";
+	import type Input from "@ui5/webcomponents/dist/Input.js";
+	import type TextArea from "@ui5/webcomponents/dist/TextArea.js";
 
 	setTheme("sap_horizon");
 
@@ -53,8 +55,8 @@
 
 	// Event Handlers
 
-	const handleItemInput = (event: any) => {
-		createTodoFields.text = event.target?.value;
+	const handleItemInput = (event: CustomEvent) => {
+		createTodoFields.text = (event.target as Input)?.value;
 	};
 
 	const handleDateInput = (event: CustomEvent<DatePickerInputEventDetail>) => (createTodoFields.date = event.detail.value);
@@ -192,7 +194,13 @@
 		<div class="dialog-content">
 			<div class="edit-wrapper">
 				<ui5-label>Title:</ui5-label>
-				<ui5-textarea class="title-textarea" show-exceeded-text maxlength={24} value={dialogFields.text} onchange={(event: any) => (dialogFields.text = event.target.value)}></ui5-textarea>
+				<ui5-textarea
+					class="title-textarea"
+					show-exceeded-text
+					maxlength={24}
+					value={dialogFields.text}
+					onchange={(event: CustomEvent) => (dialogFields.text = (event.target as TextArea)?.value)}
+				></ui5-textarea>
 			</div>
 
 			<div class="edit-wrapper date-edit-fields">
