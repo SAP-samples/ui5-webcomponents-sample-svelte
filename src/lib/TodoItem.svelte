@@ -1,26 +1,24 @@
 <script lang="ts">
-	import { createEventDispatcher } from "svelte";
 	import "@ui5/webcomponents/dist/ListItemCustom";
 	import type { TodoItemT } from "../types/TodoItem.type";
+	import type { ItemEditEvent, ItemDeleteEvent } from "./todoitem.event";
 
-	// Props
-	export let item: TodoItemT;
-	export let datakey: number;
+	interface Props {
+		// Props
+		item: TodoItemT;
+		datakey: number;
+		onDelete(item: ItemDeleteEvent): void;
+		onEdit(item: ItemEditEvent): void;
+	}
 
-	// Events do not bubble from nested components
-	// in svelte, we must dispatch them
-	const dispatcher = createEventDispatcher();
+	let { item, datakey, onEdit, onDelete }: Props = $props();
 
 	const handleEditPress = () => {
-		dispatcher("item-edit", {
-			id: item.id,
-		});
+		onEdit({ id: item.id });
 	};
 
 	const handleDeletePress = () => {
-		dispatcher("item-delete", {
-			id: item.id,
-		});
+		onDelete({ id: item.id });
 	};
 </script>
 
@@ -28,8 +26,30 @@
 	<div class="li-content">
 		<span class="li-content-text">{item.desc} - finish before: {item.deadline}</span>
 		<div class="li-content-actions">
-			<ui5-button class="edit-btn" on:click={handleEditPress}>Edit</ui5-button>
-			<ui5-button design="Negative" on:click={handleDeletePress}>Delete</ui5-button>
+			<ui5-button
+				role="button"
+				tabindex="0"
+				class="edit-btn"
+				onclick={handleEditPress}
+				onkeydown={(e: KeyboardEvent) => {
+					if (e.key === "Enter" || e.key === " ") {
+						handleEditPress();
+						e.preventDefault();
+					}
+				}}>Edit</ui5-button
+			>
+			<ui5-button
+				role="button"
+				tabindex="0"
+				design="Negative"
+				onclick={handleDeletePress}
+				onkeydown={(e: KeyboardEvent) => {
+					if (e.key === "Enter" || e.key === " ") {
+						handleDeletePress();
+						e.preventDefault();
+					}
+				}}>Delete</ui5-button
+			>
 		</div>
 	</div>
 </ui5-li-custom>
